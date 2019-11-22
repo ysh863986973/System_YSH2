@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ysh.user.dao.IUserDao">
+<!--    配置userMap-->
+    <resultMap id="userMap" type="com.ysh.user.service.pojo.User">
+        <id property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="password" column="password"/>
+        <result property="email" column="email"/>
+    </resultMap>
+
+<!--    定义一个sql语句，方便下面使用-->
+    <sql id="userColumns">
+        ${alias}.user_id,${alias}.user_name,${alias}.password,${alias}.email
+    </sql>
+
+<!--    增加mapper-->
+    <insert id="signInDao">
+        insert into user (user_name,password,email) values (#{userName},#{password},#{email});
+    </insert>
+
+    <update id="updateDao">
+        update user set user_name = #{userName},password = #{password},email = #{email} where user_id = #{userId};
+    </update>
+
+    <select id="findByIdDao" resultMap="userMap">
+        select
+        <include refid="userColumns">
+            <property name="alias" value="t1"/>
+        </include>
+        from user t1 where user_id = #{userId}
+    </select>
+
+
+</mapper>

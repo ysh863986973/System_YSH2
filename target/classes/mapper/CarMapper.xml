@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ysh.car.dao.ICarDao">
+    <resultMap id="carMap" type="com.ysh.car.service.pojo.Car">
+        <id property="carId" column="car_id"/>
+        <result property="carCid" column="car_cid"/>
+        <result property="carName" column="car_name"/>
+        <result property="carType" column="car_type"/>
+        <result property="carSeating" column="car_seating"/>
+        <result property="carPrice" column="car_price"/>
+        <result property="carNumber" column="car_number"/>
+        <result property="carPicture" column="car_picture"/>
+    </resultMap>
+
+    <sql id="carColumns">
+        ${alias}.car_id,${alias}.car_cid,${alias}.car_name,${alias}.car_type,${alias}.car_seating,${alias}.car_price,${alias}.car_number,${alias}.car_picture
+    </sql>
+
+    <select id="findByCidDao" resultMap="carMap">
+        select
+        <include refid="carColumns">
+            <property name="alias" value="t1"/>
+        </include>
+        from car t1 where t1.car_cid = #{carCid}
+        order by
+        <choose>
+            <when test="carPrice == 1">
+                t1.car_price
+            </when>
+            <when test="carNumber == 1">
+                t1.car_number
+            </when>
+        </choose>
+        desc
+    </select>
+
+    <select id="findByIdDao" resultMap="carMap">
+        select
+        <include refid="carColumns">
+            <property name="alias" value="t1"/>
+        </include>
+        from car t1 where t1.car_id = #{carId}
+    </select>
+
+</mapper>
+<!--    select * from car where car_id = 4-->

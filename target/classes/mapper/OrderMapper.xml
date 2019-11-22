@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ysh.order.dao.IOrderDao">
+    <resultMap id="orderMap" type="com.ysh.order.service.pojo.Order">
+        <id property="orderId" column="order_id"/>
+        <result property="cId" column="cid"/>
+        <result property="uId" column="uid"/>
+        <result property="getId" column="getid"/>
+        <result property="backId" column="backid"/>
+        <result property="oprice" column="oprice"/>
+        <result property="status" column="status"/>
+    </resultMap>
+
+    <resultMap id="myOrderMap" type="com.ysh.order.service.pojo.MyOrder">
+        <id property="oid" column="order_id"/>
+        <result property="oprice" column="oprice"/>
+        <result property="cname" column="car_name"/>
+        <result property="getcity" column="getcity"/>
+        <result property="backcity" column="backcity"/>
+        <result property="ostatus" column="status"/>
+    </resultMap>
+
+    <sql id="orderColumns">
+        ${alias}.order_id,${alias}.cid,${alias}.uid,${alias}.getid,${alias}.backid,${alias}.oprice,${alias}.status
+    </sql>
+
+
+    <insert id="addDao">
+        insert into car_order (cid,uid,getid,backid,oprice,status) values (#{cId},#{uId},#{getId},#{backId},#{oprice},#{status});
+    </insert>
+
+    <delete id="deleteDao">
+        delete from car_order where order_id = #{orderId}
+    </delete>
+
+    <select id="listDao" resultMap="myOrderMap">
+        select t1.order_id,t1.oprice,t2.car_name,t3.city_name as getcity,t4.city_name as backcity,t1.status
+        from car_order t1
+        left join car t2
+        on t1.cid=t2.car_id
+        left join city t3
+        on t1.getid=t3.city_id
+        left join city t4
+        on t1.backid=t4.city_id
+        where t1.uid=#{userId}
+        limit #{page},5
+    </select>
+    <select id="pageCountDao" resultType="int">
+        select count(order_id)
+        from car_order
+        where uid=#{userId}
+    </select>
+</mapper>

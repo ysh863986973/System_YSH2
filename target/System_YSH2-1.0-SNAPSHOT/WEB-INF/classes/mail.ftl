@@ -1,0 +1,1 @@
+${content},这是个通过Freemarker生成的测试邮件
